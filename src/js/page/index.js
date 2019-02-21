@@ -33,6 +33,10 @@ require(['./js/config.js'],function(){
 		}
 		
 		function addEvent(){
+			//点击添加
+			document.querySelector('#add').addEventListener('tap',function(){
+				window.location.href = './page/add.html';
+			})
 			//点击查看详情
 			mui('.mui-table-view').on('tap','.mui-detail',function(){
 				var id = this.parentElement.parentElement.dataset.id;
