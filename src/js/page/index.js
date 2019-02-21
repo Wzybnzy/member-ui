@@ -3,7 +3,9 @@ require(['./js/config.js'],function(){
 		console.log(mui);
 		var page = 1,
 			pageSize = 10,
-			total = 0;
+			total = 0,
+			search = '',
+			flag = false;
 		init();
 		addEvent();
 		function init(){
@@ -34,10 +36,28 @@ require(['./js/config.js'],function(){
 				</li>`;
 			});
 			document.querySelector('#mui-table-view').innerHTML += html;
-			mui('#pullrefresh').pullRefresh().endPullupToRefresh((++count > 2)); //参数为true代表没有更多数据了。
+			mui('#pullrefresh').pullRefresh().endPullupToRefresh((++count > total-1)); //参数为true代表没有更多数据了。
 		}
 		
 		function addEvent(){
+			//搜索
+			document.querySelector('#keyups').addEventListener('keyup',function(e){
+				// console.log(mui('#pullrefresh').pullRefresh());
+				console.log(page,'page');
+				var val = this.value;
+				if(page == total+1){
+					mui('#pullrefresh').pullRefresh().refresh(true);
+				}
+				if(e.keyCode == 13){
+					
+					search = val;
+					page = 1;
+					count = 0;
+					flag = true;
+					document.querySelector('#mui-table-view').innerHTML = '';
+					pullupRefresh();
+				}
+			})
 			//点击添加
 			document.querySelector('#add').addEventListener('tap',function(){
 				window.location.href = './page/add.html';
@@ -79,6 +99,9 @@ require(['./js/config.js'],function(){
 		var count = 0;
 		function pullupRefresh() {
 			// console.log(1111);
+			if(page == total+1){
+				mui('#pullrefresh').pullRefresh().refresh(true);
+			}
 			ajax();
 			page++;
 		}
@@ -88,11 +111,13 @@ require(['./js/config.js'],function(){
 				type:'get',
 				data:{
 					page:page,
-					pageSize:pageSize
+					pageSize:pageSize,
+					search:search
 				},
 				success:function(data){
 					console.log(data);
 					if(data.code == 0){
+						total = data.total;
 						render(data.data);
 					}
 				}

@@ -12,12 +12,15 @@
 </head>
 <style type="text/css">
 	.mui-scroll-wrapper{
-		top: 44px;
+		top: 88px;
 	}
 	.mui-table-view-cell{
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+	}
+	.mui-search{
+		margin-top: 44px;
 	}
 	
 </style>
@@ -27,7 +30,11 @@
 		<h1 class="mui-title">1611B成员</h1>
 		<button type="button" class="mui-btn mui-btn-primary" id="add">添加</button>
 	</header>
-	
+	<div class="mui-search">
+		<div class="mui-input-row mui-search">
+			<input type="search" id="keyups" class="mui-input-clear" placeholder="">
+		</div>
+	</div>
 	<!-- <div class="mui-scroll-wrapper">
 		<div class="mui-scroll">
 			<!--这里放置真实显示的DOM内容
