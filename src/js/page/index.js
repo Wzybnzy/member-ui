@@ -1,19 +1,23 @@
 require(['./js/config.js'],function(){
 	require(['mui'],function(mui){
 		console.log(mui);
+		var page = 1,
+			pageSize = 10,
+			total = 0;
 		init();
 		addEvent();
 		function init(){
 			mui('.mui-scroll-wrapper').scroll({
 				deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
 			});
-			mui.ajax('/api/list',{
-				dataType:'json',
-				type:'get',
-				success:function(data){
-					console.log(data);
-					if(data.code == 0){
-						render(data.data);
+			
+			mui.init({
+				pullRefresh: {
+					container: '#pullrefresh',
+					up: {
+						auto:true,
+						contentrefresh: '正在加载...',
+						callback: pullupRefresh
 					}
 				}
 			});
@@ -29,7 +33,8 @@ require(['./js/config.js'],function(){
 					</div>
 				</li>`;
 			});
-			document.querySelector('#mui-table-view').innerHTML = html;
+			document.querySelector('#mui-table-view').innerHTML += html;
+			mui('#pullrefresh').pullRefresh().endPullupToRefresh((++count > 2)); //参数为true代表没有更多数据了。
 		}
 		
 		function addEvent(){
@@ -68,6 +73,29 @@ require(['./js/config.js'],function(){
 						console.log(222);
 					}
 				})
+			});
+		}
+		
+		var count = 0;
+		function pullupRefresh() {
+			// console.log(1111);
+			ajax();
+			page++;
+		}
+		function ajax(){
+			mui.ajax('/api/list',{
+				dataType:'json',
+				type:'get',
+				data:{
+					page:page,
+					pageSize:pageSize
+				},
+				success:function(data){
+					console.log(data);
+					if(data.code == 0){
+						render(data.data);
+					}
+				}
 			});
 		}
 	})
